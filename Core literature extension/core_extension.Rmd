@@ -1,0 +1,73 @@
+---
+title: "Core literature extension"
+author: "Juho Salminen"
+date: "17 March 2016"
+output: html_document
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(echo=FALSE, message=FALSE, warning = FALSE)
+```
+
+```{r}
+library(ggplot2)
+source("create_network.R")
+
+core_file <- unlist(list.files("input/core", full.names = T))[1]
+new_file <-  unlist(list.files("input/new", full.names = T))[1]
+
+corelit <- read.csv(core_file, header = T, sep = ";", 
+                    stringsAsFactors = FALSE)
+newlit <- read.csv(new_file, header = T, sep = ";", 
+                   stringsAsFactors = FALSE)
+
+
+# UGLY HACK!
+corelit$CoreLiterature <- TRUE
+
+core_network <- create_network(corelit)
+core_nodes <- core_network[[1]]
+core_edges <- core_network[[2]]
+
+new_network <- create_network(newlit)
+new_nodes <- new_network[[1]]
+new_nodes$YearPublished <- as.numeric(as.character(new_nodes$YearPublished))
+new_edges <- new_network[[2]]
+
+
+# Calculate potential citations per year
+citations <- as.data.frame(table(core_nodes$YearPublished))
+names(citations) <- c("Year", "Freq")
+citations$Year <- as.numeric(as.character(citations$Year))
+citations$Cumulative <- cumsum(citations$Freq)
+citations <- citations[!is.na(citations$Year), ]
+
+get_cumsum <- function(x) {
+    return(max(citations$Cumulative[citations$Year < x]))
+} 
+new_nodes$PotentialCitations <- sapply(new_nodes$YearPublished, get_cumsum)
+
+```
+
+```{r}
+core_ids <- core_nodes$Id[core_nodes$CoreLiterature == TRUE]
+new_edges$CoreCitations <- new_edges$Target %in% core_ids
+results <- aggregate(new_edges$CoreCitations, 
+                     by = list(Id = new_edges$Source), 
+                     FUN = sum, na.rm = TRUE)
+names(results) <- c("Id", "CoreCitations")
+results <- merge(results, new_nodes, by = "Id")
+results$Article <- paste(toupper(results$DocumentTitle), " | ",
+                              results$FullReference, " | ", 
+                                      results$Abstract)
+results$Ratio <- results$CoreCitations / results$PotentialCitations
+
+results <- results[with (results, order(-Ratio)), ]
+top_results <- head(results[, c("Article", "CoreCitations", "TimesCited", 
+                                "Ratio")], 100)
+kable(top_results)
+```
+
+
+

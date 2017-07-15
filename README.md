@@ -1,37 +1,62 @@
-## Welcome to GitHub Pages
+nails
+=====
 
-You can use the [editor on GitHub](https://github.com/muratkocak25/Bibliometrics/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+**Network Analysis Interface for Literature Studies**  
+by _Juho Salminen, Antti Knutas and Arash Hajikhani_  
+at _Lappeenranta University of Technology_
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+What Is It?
+----
+This site shares our experiments and tools for performing Social Network Analysis (SNA) on citation data. As the amount of publications grows on any given field, automatic tools for this sort of analysis are becoming increasingly important prior to starting research on new fields.
 
-### Markdown
+SNA is an interesting way for researchers to map large datasets and get insights from new angles. The steps for downloading data from Web of Knowledge and using our tools to process it are detailed below. The set of tools which are required to perform the analyses are free and need a minimum amount of installation. Furthermore, there is a web-based analysis server [HAMMER](http://hammer.nailsproject.net) available so that you can process the data without needing to do any installation or manual processing steps.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+The project files are available as open source here in our [Github repository](https://github.com/aknutas/nails). If you link or refer to us, please link to our [project page](http://aknutas.github.io/nails/).
 
-```markdown
-Syntax highlighted code block
+We are working on an alternative, [R package version](https://github.com/aknutas/nails-package) for use by R programmers. For now the project is a work in progress and not fully usable.
 
-# Header 1
-## Header 2
-### Header 3
+Science!
+----
+The basic design and bibliometric principles of the system have been published in a research article:
 
-- Bulleted
-- List
+Antti Knutas, Arash Hajikhani, Juho Salminen, Jouni Ikonen, and Jari Porras. 2015. _Cloud-Based Bibliometric Analysis Service for Systematic Mapping Studies_. In Proceedings of the 16th International Conference on Computer Systems and Technologies (CompSysTech '15). DOI: [10.1145/2812428.2812442](https://doi.org/10.1145/2812428.2812442)
 
-1. Numbered
-2. List
+A preprint version of the article is [available for download](http://www.codecamp.fi/lib/exe/fetch.php/wiki/nails-compsystech2015-preprint.pdf) as PDF. The official version is now available at the [ACM Digital Library](http://dl.acm.org/citation.cfm?doid=2812428.2812442).
 
-**Bold** and _Italic_ and `Code` text
+If you use the software in your scientific work, please consider citing us.
 
-[Link](url) and ![Image](src)
-```
+How to Use
+----
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+These scripts can be used to complete an exploratory literature review
+using data downloaded from Web of Knowledge. You can follow the steps below or view a brief [video tutorial](https://youtu.be/I1bRXQs_zMk?list=PLJiFJenPKrLOpdu7E1gEhVEAWF7CLQs_2) on how to get started.
 
-### Jekyll Themes
+1. Go to Web of Knowledge website and select Web of Science Core Collection
+from the dropdown menu.
+2. Search for literature.
+3. Download data. Select Save to Other File Formats from the dropdown menu,
+enter the range of records (max 500 records for one download), and download
+Full Record and Cited References. File format should be Tab-delimited (Win) or
+Tab-delimited (Mac). If you need more than 500 records, repeat the download.
+4. Put the downloaded files into the input folder.
+5. Open exploration.Rmd with RStudio and press Knit HTML -button.
+The script will combine the downloaded data into a single file, process it and
+create visualizations. The results are saved as a HTML-file exploration.html.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/muratkocak25/Bibliometrics/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
+The script also creates node and edge tables for author and citation
+networks that can be loaded to Gephi for further exploration.  
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+See further instructions for manual usage at https://sites.google.com/site/bibliometricdatavisualization/instructions or follow the [video tutorial](https://youtu.be/I1bRXQs_zMk?list=PLJiFJenPKrLOpdu7E1gEhVEAWF7CLQs_2).
+
+Requirements
+----
+For now the project verifiedly works on R version 3.3.3 and RStudio 1.0.136.
+
+You need the following R packages (tested 13.3.2017): splitstackshape, reshape, plyr, stringr, tm, SnowballC, lda, LDAvis, igraph
+
+We are open source and free software
+----
+This program is [free software](https://www.gnu.org/philosophy/free-sw.html): you can redistribute it and/or modify it under the terms of the [GNU General Public License](https://www.gnu.org/licenses/quick-guide-gplv3.html) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See LICENSE file for more information.
+
+What does it mean? We are free as in freedom. You may run the software as you wish, for any purpose; you are free to study how the program works, and change it as you wish; you are free to redistribute copies; and you are free to distribute copies of modified versions to others. You may not distribute this software in a non-free manner or add additional restrictions. The only limitations are that you have to follow the free software license, retain the original copyright notices and acknowledgement texts in the program output (section 7b). See links above for more information. If you edit and improve the software, we would love to hear back from you.
